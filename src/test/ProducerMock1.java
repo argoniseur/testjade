@@ -1,27 +1,25 @@
 package test;
 
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.*;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
-import java.util.*;
-
-public class Producer extends Agent {
+public class ProducerMock1 extends Agent {
     private Integer renewable;
     private Integer sellprice;
-    private ArrayList<AID> consumers = new ArrayList<>();
+    private Integer nbOfConsumer;
 
     protected void setup() {
 
         Object args[] = getArguments();
         renewable = Integer.valueOf((String)args[0]);
         sellprice = Integer.valueOf((String)args[1]);
+        nbOfConsumer = 0;
         // Register the book-selling service in the yellow pages
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
@@ -74,7 +72,7 @@ public class Producer extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                if (consumers.size() < 10 && title.equals("Available ?")) {
+                if (true /*nbOfConsumer < 10 && title.equals("Available ?")*/) {
                     // Producer is available
                     System.out.println("Agent "+msg.getSender().getName()+" asks if available");
                     reply.setPerformative(ACLMessage.PROPOSE);
@@ -113,9 +111,8 @@ public class Producer extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                if (consumers.size() < 10 && title.equals("connect")) {
+                if (nbOfConsumer < 10 && title.equals("connect")) {
                     reply.setPerformative(ACLMessage.INFORM);
-                    consumers.add(msg.getSender());
                     System.out.println("Connected to agent "+msg.getSender().getName());
                 }
                 else {
