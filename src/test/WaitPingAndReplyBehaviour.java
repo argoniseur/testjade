@@ -49,4 +49,3 @@ import jade.util.Logger;
             }
         }
     }
-}
