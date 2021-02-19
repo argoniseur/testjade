@@ -41,6 +41,8 @@ public class Producer extends Agent {
 
         // Add the behaviour serving purchase orders from buyer agents
         addBehaviour(new PurchaseOrdersServer());
+
+        addBehaviour(new ShutConsumerBehaviour());
     }
 
     // Put agent clean-up operations here
@@ -126,6 +128,25 @@ public class Producer extends Agent {
                 myAgent.send(reply);
             }
             else {
+                block();
+            }
+        }
+    }
+
+    private class ShutConsumerBehaviour extends CyclicBehaviour {
+        public void action() {
+            MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+            ACLMessage msg = myAgent.receive(mt);
+            if (msg != null) {
+                // ACCEPT_PROPOSAL Message received. Process it
+                String title = msg.getContent();
+                System.out.println(title);
+                if (title.equals("Ciao")){
+                    System.out.println(consumers.toString());
+                    consumers.remove(msg.getSender());
+                    System.out.println(consumers.toString());
+                }
+            } else {
                 block();
             }
         }

@@ -25,6 +25,12 @@ public class Launcher {
             ap.start();
             ac = mc.createNewAgent("cons", Consumer.class.getName(), null);
             ac.start();
+
+            ac = mc.createNewAgent("cons2", Consumer.class.getName(), null);
+            ac.start();
+
+            //ac = mc.createNewAgent("cons4", Consumer.class.getName(), null);
+            //ac.start();
         } catch (StaleProxyException e) { }
     }
 }
