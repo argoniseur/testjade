@@ -12,6 +12,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 public class Consumer extends Agent {
 
+    public static boolean ping = false;
+    private AID connectedTo;
     // list of producers
     private AID[] producers;
 
@@ -19,7 +21,19 @@ public class Consumer extends Agent {
     protected void setup() {
         // Printout a welcome message
         System.out.println("Hallo! Buyer-agent "+getAID().getName()+" is ready.");
-
+        Behaviour pingProd = new TickerBehaviour(this, 100) {
+            @Override
+            protected void onTick() {
+                if(ping){
+                    ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+                    msg.setContent( "Ping" );
+                    msg.addReceiver( connectedTo );
+                    send(msg);
+                    System.out.println("Ping");
+                }
+            }
+        };
+        addBehaviour(pingProd);
             // Add a TickerBehaviour that schedules a request to seller agents every minute
             addBehaviour(new TickerBehaviour(this, 10000) {
                 protected void onTick() {
@@ -136,6 +150,10 @@ public class Consumer extends Agent {
                             // Purchase successful. We can terminate
                             System.out.println("Successfully connected to agent "+reply.getSender().getName());
                             System.out.println("Utility = "+bestUtility);
+                            connectedTo = reply.getSender();
+                            ping = true;
+                            block(15000);
+                            ping = false;
                             //myAgent.doDelete();
                         }
                         else {

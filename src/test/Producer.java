@@ -1,5 +1,6 @@
 package test;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
@@ -14,14 +15,13 @@ import java.util.*;
 public class Producer extends Agent {
     private Integer renewable;
     private Integer sellprice;
-    private Integer nbOfConsumer;
+    private ArrayList<AID> consumers = new ArrayList<>();
 
     protected void setup() {
 
         Object args[] = getArguments();
         renewable = Integer.valueOf((String)args[0]);
         sellprice = Integer.valueOf((String)args[1]);
-        nbOfConsumer = 0;
         // Register the book-selling service in the yellow pages
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
@@ -74,7 +74,7 @@ public class Producer extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                if (nbOfConsumer < 10 && title.equals("Available ?")) {
+                if (consumers.size() < 10 && title.equals("Available ?")) {
                     // Producer is available
                     reply.setPerformative(ACLMessage.PROPOSE);
                     byte [] content = new byte[2];
@@ -112,8 +112,9 @@ public class Producer extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                if (nbOfConsumer < 10 && title.equals("connect")) {
+                if (consumers.size() < 10 && title.equals("connect")) {
                     reply.setPerformative(ACLMessage.INFORM);
+                    consumers.add(msg.getSender());
                     System.out.println("Connected to agent "+msg.getSender().getName());
                 }
                 else {
