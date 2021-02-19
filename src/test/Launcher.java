@@ -15,16 +15,15 @@ public class Launcher {
         AgentContainer mc = runtime.createMainContainer(config);
         AgentController ac, ap;
 
-        Object [] arg = new Object[3];
+        Object [] arg = new Object[2];
         arg[0] = "1";
-        arg[1] = "arg2";
-        arg[2] = "This is argument 3";
+        arg[1] = "30";
 
         try {
             ap = mc.createNewAgent("prod", Producer.class.getName(), arg);
 
             ap.start();
-            ac = mc.createNewAgent("cons", Consumer.class.getName(), arg);
+            ac = mc.createNewAgent("cons", Consumer.class.getName(), null);
             ac.start();
         } catch (StaleProxyException e) { }
     }

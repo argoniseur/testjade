@@ -12,26 +12,22 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.util.*;
 
 public class Producer extends Agent {
-    // The catalogue of books for sale (maps the title of a book to its price)
-    private Hashtable catalogue;
-    // The GUI by means of which the user can add books in the catalogue
-    private ProducerGUI myGui;
+    private Integer renewable;
+    private Integer sellprice;
+    private Integer nbOfConsumer;
 
-    // Put agent initializations here
     protected void setup() {
-        // Create the catalogue
-        catalogue = new Hashtable();
 
-        // Create and show the GUI
-        myGui = new ProducerGUI(this);
-        myGui.showGui();
-
+        Object args[] = getArguments();
+        renewable = Integer.valueOf((String)args[0]);
+        sellprice = Integer.valueOf((String)args[1]);
+        nbOfConsumer = 0;
         // Register the book-selling service in the yellow pages
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
-        sd.setType("book-selling");
-        sd.setName("JADE-book-trading");
+        sd.setType("energy-trading");
+        sd.setName("JADE-energy-trading");
         dfd.addServices(sd);
         try {
             DFService.register(this, dfd);
@@ -56,23 +52,10 @@ public class Producer extends Agent {
         catch (FIPAException fe) {
             fe.printStackTrace();
         }
-        // Close the GUI
-        myGui.dispose();
         // Printout a dismissal message
         System.out.println("Seller-agent "+getAID().getName()+" terminating.");
     }
 
-    /**
-     This is invoked by the GUI when the user adds a new book for sale
-     */
-    public void updateCatalogue(final String title, final int price) {
-        addBehaviour(new OneShotBehaviour() {
-            public void action() {
-                catalogue.put(title, new Integer(price));
-                System.out.println(title+" inserted into catalogue. Price = "+price);
-            }
-        } );
-    }
 
     /**
      Inner class OfferRequestsServer.
@@ -91,14 +74,16 @@ public class Producer extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                Integer price = (Integer) catalogue.get(title);
-                if (price != null) {
-                    // The requested book is available for sale. Reply with the price
+                if (nbOfConsumer < 10 && title.equals("Available ?")) {
+                    // Producer is available
                     reply.setPerformative(ACLMessage.PROPOSE);
-                    reply.setContent(String.valueOf(price.intValue()));
+                    byte [] content = new byte[2];
+                    content[0] = renewable.byteValue();
+                    content[1] = sellprice.byteValue();
+                    reply.setByteSequenceContent(content);
                 }
                 else {
-                    // The requested book is NOT available for sale.
+                    // Producer nor available, or message is not a request
                     reply.setPerformative(ACLMessage.REFUSE);
                     reply.setContent("not-available");
                 }
@@ -108,7 +93,7 @@ public class Producer extends Agent {
                 block();
             }
         }
-    }  // End of inner class OfferRequestsServer
+    }
 
     /**
      Inner class PurchaseOrdersServer.
@@ -127,13 +112,12 @@ public class Producer extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                Integer price = (Integer) catalogue.remove(title);
-                if (price != null) {
+                if (nbOfConsumer < 10 && title.equals("connect")) {
                     reply.setPerformative(ACLMessage.INFORM);
-                    System.out.println(title+" sold to agent "+msg.getSender().getName());
+                    System.out.println("Connected to agent "+msg.getSender().getName());
                 }
                 else {
-                    // The requested book has been sold to another buyer in the meanwhile .
+                    // Max consumer reached in the meanwhile
                     reply.setPerformative(ACLMessage.FAILURE);
                     reply.setContent("not-available");
                 }
@@ -143,5 +127,5 @@ public class Producer extends Agent {
                 block();
             }
         }
-    }  // End of inner class OfferRequestsServer
+    }
 }
