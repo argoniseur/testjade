@@ -1,17 +1,15 @@
 package test;
 
 import jade.core.Agent;
-import jade.core.behaviours.*;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
-import java.util.*;
-
-public class Producer extends Agent {
+public class ProducerMock2 extends Agent {
     private Integer renewable;
     private Integer sellprice;
     private Integer nbOfConsumer;
@@ -57,14 +55,6 @@ public class Producer extends Agent {
     }
 
 
-    /**
-     Inner class OfferRequestsServer.
-     This is the behaviour used by Book-seller agents to serve incoming requests
-     for offer from buyer agents.
-     If the requested book is in the local catalogue the seller agent replies
-     with a PROPOSE message specifying the price. Otherwise a REFUSE message is
-     sent back.
-     */
     private class OfferRequestsServer extends CyclicBehaviour {
         public void action() {
             MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
@@ -96,16 +86,8 @@ public class Producer extends Agent {
         }
     }
 
-    /**
-     Inner class PurchaseOrdersServer.
-     This is the behaviour used by Book-seller agents to serve incoming
-     offer acceptances (i.e. purchase orders) from buyer agents.
-     The seller agent removes the purchased book from its catalogue
-     and replies with an INFORM message to notify the buyer that the
-     purchase has been sucesfully completed.
-     */
     private class PurchaseOrdersServer extends CyclicBehaviour {
-        public void action() {
+        public void action() {/*
             MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
             ACLMessage msg = myAgent.receive(mt);
             if (msg != null) {
@@ -126,7 +108,7 @@ public class Producer extends Agent {
             }
             else {
                 block();
-            }
+            }*/
         }
     }
 }

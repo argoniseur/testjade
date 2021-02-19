@@ -1,17 +1,15 @@
 package test;
 
 import jade.core.Agent;
-import jade.core.behaviours.*;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
-import java.util.*;
-
-public class Producer extends Agent {
+public class ProducerMock1 extends Agent {
     private Integer renewable;
     private Integer sellprice;
     private Integer nbOfConsumer;
@@ -74,7 +72,7 @@ public class Producer extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                if (nbOfConsumer < 10 && title.equals("Available ?")) {
+                if (true /*nbOfConsumer < 10 && title.equals("Available ?")*/) {
                     // Producer is available
                     System.out.println("Agent "+msg.getSender().getName()+" asks if available");
                     reply.setPerformative(ACLMessage.PROPOSE);

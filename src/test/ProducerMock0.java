@@ -1,17 +1,15 @@
 package test;
 
 import jade.core.Agent;
-import jade.core.behaviours.*;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
-import java.util.*;
-
-public class Producer extends Agent {
+public class ProducerMock0 extends Agent {
     private Integer renewable;
     private Integer sellprice;
     private Integer nbOfConsumer;
@@ -66,7 +64,7 @@ public class Producer extends Agent {
      sent back.
      */
     private class OfferRequestsServer extends CyclicBehaviour {
-        public void action() {
+        public void action() {/*
             MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
             ACLMessage msg = myAgent.receive(mt);
             if (msg != null) {
@@ -92,7 +90,7 @@ public class Producer extends Agent {
             }
             else {
                 block();
-            }
+            }*/
         }
     }
 
