@@ -22,7 +22,7 @@ public class Producer extends Agent {
         Object args[] = getArguments();
         renewable = Integer.valueOf((String)args[0]);
         sellprice = Integer.valueOf((String)args[1]);
-        // Register the book-selling service in the yellow pages
+        // Register the producer in the yellow pages
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -42,10 +42,10 @@ public class Producer extends Agent {
         // Add the behaviour serving purchase orders from buyer agents
         addBehaviour(new PurchaseOrdersServer());
 
+        // Add the behaviour disconnecting the consumer
         addBehaviour(new ShutConsumerBehaviour());
     }
 
-    // Put agent clean-up operations here
     protected void takeDown() {
         // Deregister from the yellow pages
         try {
@@ -54,18 +54,14 @@ public class Producer extends Agent {
         catch (FIPAException fe) {
             fe.printStackTrace();
         }
-        // Printout a dismissal message
         System.out.println("Seller-agent "+getAID().getName()+" terminating.");
     }
 
 
     /**
      Inner class OfferRequestsServer.
-     This is the behaviour used by Book-seller agents to serve incoming requests
-     for offer from buyer agents.
-     If the requested book is in the local catalogue the seller agent replies
-     with a PROPOSE message specifying the price. Otherwise a REFUSE message is
-     sent back.
+     This is the behaviour used by producer to process the incoming
+     questions from agents and send them energy proposals
      */
     private class OfferRequestsServer extends CyclicBehaviour {
         public void action() {
@@ -100,11 +96,7 @@ public class Producer extends Agent {
 
     /**
      Inner class PurchaseOrdersServer.
-     This is the behaviour used by Book-seller agents to serve incoming
-     offer acceptances (i.e. purchase orders) from buyer agents.
-     The seller agent removes the purchased book from its catalogue
-     and replies with an INFORM message to notify the buyer that the
-     purchase has been sucesfully completed.
+     This is the behaviour used by the producer to acknoledge the connection to the consumer
      */
     private class PurchaseOrdersServer extends CyclicBehaviour {
         public void action() {
@@ -133,6 +125,12 @@ public class Producer extends Agent {
         }
     }
 
+    /**
+     Inner class ShutConsumerBehaviour.
+     This is the behaviour used by producer agents to serve incoming
+     consumer disconnection notifications
+     The producer agent removes the consumer from the consumer list
+     */
     private class ShutConsumerBehaviour extends CyclicBehaviour {
         public void action() {
             MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);

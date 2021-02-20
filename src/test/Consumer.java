@@ -17,12 +17,10 @@ public class Consumer extends Agent {
     // list of producers
     private AID[] producers;
 
-    // Put agent initializations here
     protected void setup() {
-        // Printout a welcome message
         System.out.println("Hallo! Buyer-agent "+getAID().getName()+" is ready.");
 
-            // Add a TickerBehaviour that schedules a request to seller agents every minute
+            // Add a TickerBehaviour that schedules a request to seller agents every 10s in case we do not find any
             addBehaviour(new TickerBehaviour(this, 10000) {
                 protected void onTick() {
                     System.out.println("Trying to buy energy");
@@ -50,20 +48,18 @@ public class Consumer extends Agent {
             } );
     }
 
-    // Put agent clean-up operations here
     protected void takeDown() {
-        // Printout a dismissal message
         System.out.println("Buyer-agent "+getAID().getName()+" terminating.");
     }
 
     /**
      Inner class RequestPerformer.
-     This is the behaviour used by Book-buyer agents to request seller
-     agents the target book.
+     This is the behaviour used by consumer agents to request producer
+     agents
      */
     private class RequestPerformer extends Behaviour {
         private AID bestSeller; // The agent who provides the best offer
-        private int bestUtility;  // The best offered price
+        private int bestUtility;  // The best offered best utility
         private int repliesCnt = 0; // The counter of replies from seller agents
         private MessageTemplate mt; // The template to receive replies
         private int step = 0;
@@ -78,7 +74,7 @@ public class Consumer extends Agent {
                     }
                     cfp.setContent("Available ?");
                     cfp.setConversationId("energy-trade");
-                    cfp.setReplyWith("cfp"+System.currentTimeMillis()); // Unique value
+                    cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique value
                     myAgent.send(cfp);
                     // Prepare the template to get proposals
                     mt = MessageTemplate.and(MessageTemplate.MatchConversationId("energy-trade"),
@@ -93,11 +89,11 @@ public class Consumer extends Agent {
                         if (reply.getPerformative() == ACLMessage.PROPOSE) {
                             // This is an offer
                             int utility;
-                            byte [] response = reply.getByteSequenceContent();
+                            byte[] response = reply.getByteSequenceContent();
 
-                            if (response[0] == 0){
+                            if (response[0] == 0) {
                                 utility = response[1];
-                            }else{
+                            } else {
                                 utility = response[1] / 2;
                             }
                             if (bestSeller == null || utility < bestUtility) {
@@ -108,11 +104,9 @@ public class Consumer extends Agent {
                         }
                         repliesCnt++;
                         if (repliesCnt >= producers.length) {
-                            // We received all replies
                             step = 2;
                         }
-                    }
-                    else {
+                    } else {
                         block();
                     }
                     break;
@@ -122,7 +116,7 @@ public class Consumer extends Agent {
                     order.addReceiver(bestSeller);
                     order.setContent("connect");
                     order.setConversationId("energy-trade");
-                    order.setReplyWith("order"+System.currentTimeMillis());
+                    order.setReplyWith("order" + System.currentTimeMillis());
                     myAgent.send(order);
                     // Prepare the template to get the purchase order reply
                     mt = MessageTemplate.and(MessageTemplate.MatchConversationId("energy-trade"),
@@ -135,20 +129,16 @@ public class Consumer extends Agent {
                     if (reply != null) {
                         // Purchase order reply received
                         if (reply.getPerformative() == ACLMessage.INFORM) {
-                            // Purchase successful. We can terminate
-                            System.out.println("Successfully connected to agent "+reply.getSender().getName());
-                            System.out.println("Utility = "+bestUtility);
+                            System.out.println("Successfully connected to agent " + reply.getSender().getName());
+                            System.out.println("Utility = " + bestUtility);
                             connectedTo = reply.getSender();
                             step = 4;
-                            //myAgent.doDelete();
-                        }
-                        else {
+                        } else {
                             System.out.println("Attempt failed: Producer full.");
                         }
 
 
-                    }
-                    else {
+                    } else {
                         block();
                     }
 
@@ -176,5 +166,5 @@ public class Consumer extends Agent {
             }
             return ((step == 2 && bestSeller == null) || step == 6);
         }
-    }  // End of inner class RequestPerformer
+    }
 }
