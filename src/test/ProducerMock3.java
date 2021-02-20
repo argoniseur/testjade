@@ -111,7 +111,7 @@ public class ProducerMock3 extends Agent {
                 String title = msg.getContent();
                 ACLMessage reply = msg.createReply();
 
-                if (nbOfConsumer < 10 && title.equals("connect")) {
+                if (nbOfConsumer < 10 /*&& title.equals("connect")*/) {
                     reply.setPerformative(ACLMessage.INFORM);
                     System.out.println("Connected to agent "+msg.getSender().getName());
                 }
