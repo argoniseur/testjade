@@ -1,3 +1,10 @@
+/*
+CustomerMock2 : Agent that buys energy immediately
+from all producers without comparing.
+ProducerMock3 : Agent that only sells and under any condition.
+
+ */
+
 package test;
 
 import jade.core.Profile;

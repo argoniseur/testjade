@@ -1,3 +1,8 @@
+/*ProducerMock4 : Agent that only sells and under any condition.
+
+To test with LauncherMockp4
+ */
+
 package test;
 
 import jade.core.AID;
