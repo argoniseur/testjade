@@ -54,7 +54,7 @@ public class Producer extends Agent {
         catch (FIPAException fe) {
             fe.printStackTrace();
         }
-        System.out.println("Seller-agent "+getAID().getName()+" terminating.");
+        System.out.println("Producer "+getAID().getName()+" terminating.");
     }
 
 

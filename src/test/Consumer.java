@@ -18,7 +18,7 @@ public class Consumer extends Agent {
     private AID[] producers;
 
     protected void setup() {
-        System.out.println("Hallo! Buyer-agent "+getAID().getName()+" is ready.");
+        System.out.println("Consumer "+getAID().getName()+" is ready.");
 
             // Add a TickerBehaviour that schedules a request to seller agents every 10s in case we do not find any
             addBehaviour(new TickerBehaviour(this, 10000) {
@@ -49,7 +49,7 @@ public class Consumer extends Agent {
     }
 
     protected void takeDown() {
-        System.out.println("Buyer-agent "+getAID().getName()+" terminating.");
+        System.out.println("Consumer "+getAID().getName()+" terminating.");
     }
 
     /**
