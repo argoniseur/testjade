@@ -1,3 +1,8 @@
+/* CustomerMock3 : Agent that checks availability of
+producers and immediately sends a message
+to break the ping connection, without buying anything.
+ * To test with LauncherMock3 */
+
 package test;
 
 import jade.core.Agent;

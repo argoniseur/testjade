@@ -1,3 +1,7 @@
+/* CustomerMock2 : Agent that buys energy immediately
+from all producers without comparing.
+ To test with LauncherMock2 */
+
 package test;
 
 import jade.core.AID;

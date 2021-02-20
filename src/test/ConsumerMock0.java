@@ -1,3 +1,6 @@
+/* CustomerMock0 : Agent that only fetches the list of producers
+* To test with LauncherMock0 */
+
 package test;
 
 import jade.core.AID;

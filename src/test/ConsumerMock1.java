@@ -1,3 +1,7 @@
+/* CustomerMock1 : Agent that only sends a message
+to check the availability of a producer but doesn’t order anything.
+ * To test with LauncherMock1 */
+
 package test;
 
 import jade.core.AID;

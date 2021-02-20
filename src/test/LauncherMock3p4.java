@@ -1,3 +1,7 @@
+/*ProducerMock4 : Agent that only sells and under any condition.
+
+ */
+
 package test;
 
 import jade.core.Profile;

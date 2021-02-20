@@ -1,3 +1,8 @@
+/*ProducerMock0 : Agent that only sells if asked
+but doesn’t signal its presence.
+To test with LauncherMockp0
+ */
+
 package test;
 
 import jade.core.Agent;

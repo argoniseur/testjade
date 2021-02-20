@@ -1,3 +1,8 @@
+/*ProducerMock3 : Agent that only sells and under any condition.
+
+To test with LauncherMockp3
+ */
+
 package test;
 
 import jade.core.Agent;

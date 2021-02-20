@@ -1,3 +1,8 @@
+/*ProducerMock1 : Agent that always declares
+itself available even if it has more than 10 customers.
+
+ */
+
 package test;
 
 import jade.core.Profile;
